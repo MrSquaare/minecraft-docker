@@ -1,0 +1,8 @@
+# Run configurations
+.run/
+
+# Jetbrains
+.idea/
+
+# Visual Studio Code
+.vscode/

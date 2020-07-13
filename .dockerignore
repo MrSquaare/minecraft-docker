@@ -1,0 +1,6 @@
+# Ignore all
+**
+
+# Whitelist
+!docker-entrypoint.sh
+!scripts/

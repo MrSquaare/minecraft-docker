@@ -1,11 +1,16 @@
-#!/usr/bin/env sh
+# IMPORTS
 
 . minecraft_library.sh
 
 # VARIABLES
 
-export MINECRAFT_TYPE=${MINECRAFT_TYPE:-release}
-export MINECRAFT_VERSION=${MINECRAFT_VERSION:-latest}
+FORCE_COPY=${FORCE_COPY:-false}
+FORCE_DOWNLOAD=${FORCE_DOWNLOAD:-false}
+
+MINECRAFT_TYPE=${MINECRAFT_TYPE:-release}
+MINECRAFT_VERSION=${MINECRAFT_VERSION:-latest}
+
+MINECRAFT_VERSION_FILE="$DATA_DIRECTORY/.version"
 
 # FUNCTIONS
 
@@ -37,8 +42,25 @@ if [ ! -d "$DOWNLOAD_DIRECTORY" ]; then
   mkdir -p "$DOWNLOAD_DIRECTORY" || exit 1
 fi
 
-export MINECRAFT_VERSION=$(get_version "$MINECRAFT_VERSION" "$MINECRAFT_TYPE" | jq -r ".id")
+MINECRAFT_VERSION=$(get_version "$MINECRAFT_VERSION" "$MINECRAFT_TYPE" | jq -r ".id")
 
 if [ -z "$MINECRAFT_VERSION" ]; then
   echo_error "Version not found. Verify that the $MINECRAFT_VERSION ($MINECRAFT_TYPE) version exists." && exit 1
 fi
+
+if [ -f "$MINECRAFT_VERSION_FILE" ]; then
+  minecraft_version=$(cat "$MINECRAFT_VERSION_FILE")
+
+  if [ "$minecraft_version" != "$MINECRAFT_VERSION" ]; then
+    FORCE_COPY="true"
+  fi
+else
+  FORCE_COPY="true"
+fi
+
+echo "$MINECRAFT_VERSION" >"$MINECRAFT_VERSION_FILE"
+
+export FORCE_COPY
+export FORCE_DOWNLOAD
+export MINECRAFT_TYPE
+export MINECRAFT_VERSION

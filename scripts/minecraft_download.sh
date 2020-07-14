@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 
+# IMPORTS
+
 . minecraft_library.sh
 
 # VARIABLES
@@ -25,21 +27,25 @@ echo_success() {
 ## PROGRAM FUNCTIONS
 
 download() {
-  if [ ! -f "$MINECRAFT_FILE" ]; then
+  if [ ! -f "$MINECRAFT_FILE" ] || [ "$FORCE_DOWNLOAD" = "true" ]; then
     server_url=$(get_version "$MINECRAFT_VERSION" "$MINECRAFT_TYPE" | jq -r ".downloads.server.url")
 
     echo_info "Downloading $MINECRAFT_FILE..."
     curl --progress-bar "$server_url" -o "$MINECRAFT_FILE" &&
       echo_success "Downloaded $MINECRAFT_FILE" ||
       (echo_error "Can't download $MINECRAFT_FILE" && exit 1)
+
+    FORCE_COPY=true
   fi
 }
 
 copy() {
-  echo_info "Copying $MINECRAFT_FILE to $SERVER_FILE..."
-  cp -f "$MINECRAFT_FILE" "$SERVER_FILE" && \
-    echo_success "Copied $MINECRAFT_FILE" ||
-    (echo_error "Can't copy $MINECRAFT_FILE" && exit 1)
+  if [ ! -f "$SERVER_FILE" ] || [ "$FORCE_COPY" = "true" ]; then
+    echo_info "Copying $MINECRAFT_FILE to $SERVER_FILE..."
+    cp -f "$MINECRAFT_FILE" "$SERVER_FILE" &&
+      echo_success "Copied $MINECRAFT_FILE" ||
+      (echo_error "Can't copy $MINECRAFT_FILE" && exit 1)
+  fi
 }
 
 # PROGRAM

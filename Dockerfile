@@ -17,6 +17,7 @@ RUN apk update && \
     apk upgrade
 
 RUN apk add \
+    bash \
     curl \
     git \
     jq \
@@ -32,6 +33,8 @@ ENV DATA_DIRECTORY="${ROOT_DIRECTORY}/data"
 ENV DOWNLOAD_DIRECTORY="${ROOT_DIRECTORY}/download"
 
 ENV SERVER_FILE="${DATA_DIRECTORY}/server.jar"
+
+SHELL ["/bin/bash", "-c"]
 
 COPY docker-entrypoint.sh /usr/local/bin
 COPY scripts/ /usr/local/bin

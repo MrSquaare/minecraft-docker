@@ -30,28 +30,36 @@ echo_success() {
 
 # PROGRAM
 
-if [ ! -d "$BUILD_DIRECTORY" ]; then
-  mkdir -p "$BUILD_DIRECTORY" || exit 1
+if [[ ! -d "$BUILD_DIRECTORY" ]]; then
+  if ! mkdir -p "$BUILD_DIRECTORY"; then
+    echo_error "Can't create build directory" && exit 1
+  fi
 fi
 
-if [ ! -d "$DATA_DIRECTORY" ]; then
-  mkdir -p "$DATA_DIRECTORY" || exit 1
+if [[ ! -d "$DATA_DIRECTORY" ]]; then
+  if ! mkdir -p "$DATA_DIRECTORY"; then
+    echo_error "Can't create data directory" && exit 1
+  fi
 fi
 
-if [ ! -d "$DOWNLOAD_DIRECTORY" ]; then
-  mkdir -p "$DOWNLOAD_DIRECTORY" || exit 1
+if [[ ! -d "$DOWNLOAD_DIRECTORY" ]]; then
+  if ! mkdir -p "$DOWNLOAD_DIRECTORY"; then
+    echo_error "Can't create download directory" && exit 1
+  fi
 fi
 
-MINECRAFT_VERSION=$(get_version "$MINECRAFT_VERSION" "$MINECRAFT_TYPE" | jq -r ".id")
+minecraft_get_version=$(get_version "$MINECRAFT_VERSION" "$MINECRAFT_TYPE" | jq -r ".id")
 
-if [ -z "$MINECRAFT_VERSION" ]; then
+if [[ -z "$minecraft_get_version" ]]; then
   echo_error "Version not found. Verify that the $MINECRAFT_VERSION ($MINECRAFT_TYPE) version exists." && exit 1
 fi
 
-if [ -f "$MINECRAFT_VERSION_FILE" ]; then
-  minecraft_version=$(cat "$MINECRAFT_VERSION_FILE")
+MINECRAFT_VERSION=$minecraft_get_version
 
-  if [ "$minecraft_version" != "$MINECRAFT_VERSION" ]; then
+if [[ -f "$MINECRAFT_VERSION_FILE" ]]; then
+  minecraft_last_version=$(cat "$MINECRAFT_VERSION_FILE")
+
+  if [[ "$minecraft_last_version" != "$MINECRAFT_VERSION" ]]; then
     FORCE_COPY="true"
   fi
 else

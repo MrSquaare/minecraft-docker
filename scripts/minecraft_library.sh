@@ -18,7 +18,7 @@ get_version() {
 
   manifest_data=$(curl_data -s "$MINECRAFT_VERSION_MANIFEST_URL")
 
-  if [ "$minecraft_version" = "latest" ]; then
+  if [[ "$minecraft_version" = "latest" ]]; then
     case "$minecraft_type" in
     release | snapshot)
       minecraft_version=$(echo "$manifest_data" | jq -r ".latest.$minecraft_type")

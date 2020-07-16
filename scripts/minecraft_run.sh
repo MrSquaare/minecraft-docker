@@ -21,9 +21,11 @@ echo_success() {
 run() {
   echo_info "Running server..."
 
-  java -Xmx"${JAVA_XMX:-1024M}" -Xms"${JAVA_XMS:-1024M}" -jar "$SERVER_FILE" "$SERVER_ARGUMENTS" &&
-    echo_success "Ran server" ||
-    (echo_error "Can't run server" && exit 1)
+  if java -Xmx"${JAVA_XMX:-1024M}" -Xms"${JAVA_XMS:-1024M}" -jar "$SERVER_FILE" "$SERVER_ARGUMENTS"; then
+    echo_success "Ran server"
+  else
+    echo_error "Can't run server" && exit 1
+  fi
 }
 
 # PROGRAM

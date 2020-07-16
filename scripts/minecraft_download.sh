@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 # IMPORTS
 
@@ -27,24 +27,30 @@ echo_success() {
 ## PROGRAM FUNCTIONS
 
 download() {
-  if [ ! -f "$MINECRAFT_FILE" ] || [ "$FORCE_DOWNLOAD" = "true" ]; then
+  if [[ ! -f "$MINECRAFT_FILE" ]] || [[ "$FORCE_DOWNLOAD" == "true" ]]; then
     server_url=$(get_version "$MINECRAFT_VERSION" "$MINECRAFT_TYPE" | jq -r ".downloads.server.url")
 
     echo_info "Downloading $MINECRAFT_FILE..."
-    curl --progress-bar "$server_url" -o "$MINECRAFT_FILE" &&
-      echo_success "Downloaded $MINECRAFT_FILE" ||
-      (echo_error "Can't download $MINECRAFT_FILE" && exit 1)
+
+    if curl --progress-bar "$server_url" -o "$MINECRAFT_FILE"; then
+      echo_success "Downloaded $MINECRAFT_FILE"
+    else
+      echo_error "Can't download $MINECRAFT_FILE" && exit 1
+    fi
 
     FORCE_COPY=true
   fi
 }
 
 copy() {
-  if [ ! -f "$SERVER_FILE" ] || [ "$FORCE_COPY" = "true" ]; then
+  if [[ ! -f "$SERVER_FILE" ]] || [[ "$FORCE_COPY" == "true" ]]; then
     echo_info "Copying $MINECRAFT_FILE to $SERVER_FILE..."
-    cp -f "$MINECRAFT_FILE" "$SERVER_FILE" &&
-      echo_success "Copied $MINECRAFT_FILE" ||
-      (echo_error "Can't copy $MINECRAFT_FILE" && exit 1)
+
+    if cp -f "$MINECRAFT_FILE" "$SERVER_FILE"; then
+      echo_success "Copied $MINECRAFT_FILE"
+    else
+      echo_error "Can't copy $MINECRAFT_FILE" && exit 1
+    fi
   fi
 }
 

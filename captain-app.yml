@@ -1,0 +1,59 @@
+version: "3.8"
+services:
+  "$$cap_appname":
+    build: .
+    environment:
+      FORCE_COPY: "$$cap_force_copy"
+      FORCE_DOWNLOAD: "$$cap_force_download"
+      JAVA_XMS: "$$cap_java_xms"
+      JAVA_XMX: "$$cap_java_xmx"
+      MINECRAFT_OPTIONS: "$$cap_minecraft_options"
+      MINECRAFT_TYPE: "$$cap_minecraft_type"
+      MINECRAFT_VERSION: "$$cap_minecraft_version"
+    restart: always
+    volumes:
+      - "$$cap_appname-data:/srv/minecraft/data"
+    caproverExtra:
+      notExposeAsWebApp: "true"
+captainVersion: 4
+caproverOneClickApp:
+  displayName: "Minecraft Docker"
+  description: "Docker image for Minecraft"
+  documentation: "https://github.com/MrSquaare/minecraft-docker"
+  isOfficial: true
+  instructions:
+    start: |-
+      Minecraft Docker is a Docker image for setting up a Minecraft server.
+    end: |-
+      Minecraft Docker has been successfully deployed!
+  variables:
+    - id: "$$cap_force_copy"
+      label: "Force copy"
+      description: "Force the copy of the downloaded server JAR file"
+      defaultValue: "false"
+      validRegex: "/false|true/"
+    - id: "$$cap_force_download"
+      label: "Force download"
+      description: "Force the download of the server JAR file"
+      defaultValue: "false"
+      validRegex: "/false|true/"
+    - id: "$$cap_java_xms"
+      label: "Java XMS"
+      description: "Initial memory allocation pool for the JVM"
+      defaultValue: "1024M"
+    - id: "$$cap_java_xmx"
+      label: "Java XMX"
+      description: "Maximum memory allocation pool for the JVM"
+      defaultValue: "1024M"
+    - id: "$$cap_minecraft_options"
+      label: "Minecraft options"
+      description: "Options for the server JAR file"
+    - id: "$$cap_minecraft_type"
+      label: "Minecraft type"
+      description: "Type of Minecraft version"
+      defaultValue: "release"
+      validRegex: "/release|snapshot/"
+    - id: "$$cap_minecraft_version"
+      label: "Minecraft version"
+      description: "Version of Minecraft"
+      defaultValue: "latest"

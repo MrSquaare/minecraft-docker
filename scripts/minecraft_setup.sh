@@ -66,7 +66,9 @@ else
   FORCE_COPY="true"
 fi
 
-echo "$MINECRAFT_VERSION" >"$MINECRAFT_VERSION_FILE"
+if ! echo "$MINECRAFT_VERSION" >"$MINECRAFT_VERSION_FILE"; then
+  echo_error "Can't create version file" && exit 1
+fi
 
 export FORCE_COPY
 export FORCE_DOWNLOAD

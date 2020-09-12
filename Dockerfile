@@ -11,7 +11,7 @@ LABEL fr.mrsquaare.image.version=${IMAGE_VERSION}
 LABEL fr.mrsquaare.image.vendor="MrSquaare"
 LABEL fr.mrsquaare.image.licenses="MIT"
 LABEL fr.mrsquaare.image.title="Minecraft Docker"
-LABEL fr.mrsquaare.image.description="Docker image for Minecraft"
+LABEL fr.mrsquaare.image.description="Docker image for Minecraft server"
 
 RUN apk update && \
     apk upgrade
